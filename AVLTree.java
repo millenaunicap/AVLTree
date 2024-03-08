@@ -1,6 +1,8 @@
 package AVLNode;
-import java.util.LinkedList;
 import java.util.Queue;
+import java.util.LinkedList;
+
+
 
 public class AVLTree<T extends Comparable<T>> {
     private AVLNode<T> root;
@@ -59,41 +61,77 @@ public class AVLTree<T extends Comparable<T>> {
         return r;
     }
 
-    private AVLNode<T> rotateRight(AVLNode<T> y) {
-        AVLNode<T> x = y.getLeft();
-        AVLNode<T> temp = x.getRight();
-
-        x.setRight(y);
-        y.setLeft(temp);
-
-        y.setFatBal(Math.max(height(y.getLeft()), height(y.getRight())) + 1);
-        x.setFatBal(Math.max(height(x.getLeft()), height(x.getRight())) + 1);
-
-        return x;
-    }
-
-    private AVLNode<T> rotateLeft(AVLNode<T> x) {
-        AVLNode<T> y = x.getRight();
-        AVLNode<T> temp = y.getLeft();
-
-        y.setLeft(x);
-        x.setRight(temp);
-
-        x.setFatBal(Math.max(height(x.getLeft()), height(x.getRight())) + 1);
-        y.setFatBal(Math.max(height(y.getLeft()), height(y.getRight())) + 1);
-
-        return y;
-        
-    }
-    
-    private int height(AVLNode<T> node) {
-        if (node == null) {
-            return 0;
-        }
-    
-        return Math.max(height(node.getLeft()), height(node.getRight()));
-        
+    private AVLNode<T> rotateRight(AVLNode<T> a) {
+    	AVLNode<T> b, c;
+    	b = a.getLeft();
+    	if(b.getFatBal()== -1) {
+    		a.setLeft(b.getRight());
+    		b.setRight(a);
+    		a.setFatBal(0);
+    		a = b;
+    		
+    		}else {
+    			
+    			c = b.getRight();
+    			b.setRight(c.getLeft());
+    			c.setLeft(b);
+    			a.setLeft(c.getRight());
+    			c.setRight(a);
+    			
+    			if(c.getFatBal()== -1) {
+    				a.setFatBal(1);
+    			} else {
+    				a.setFatBal(1);
+    			} if(c.getFatBal()==1) {
+    				b.setFatBal(-1);
+    			} else {
+    				b.setFatBal(0);
+    			}
+    			a = c;
     	}
+    	a.setFatBal(0);
+    	this.status = false;
+    	return a;
+    		
+    	
+    }
+
+    private AVLNode<T> rotateLeft(AVLNode<T> a) {
+    	
+    	AVLNode<T> b, c;
+    	b = a.getRight();
+    	if(b.getFatBal()== 1) {
+    		a.setRight(b.getLeft());
+    		b.setLeft(a);
+    		a.setFatBal(0);
+    		a = b;
+    		
+    		} else {
+    			
+    			c = b.getLeft();
+    			b.setLeft(c.getRight());
+    			c.setRight(b);
+    			a.setRight(c.getRight());
+    			c.setLeft(a);
+    			
+    			if(c.getFatBal()== 1) {
+    				a.setFatBal(-1);
+    			} else {
+    				a.setFatBal(0);
+    			} if(c.getFatBal()==-1) {
+    				b.setFatBal(1);
+    			} else {
+    				b.setFatBal(0);
+    			}
+    			a = c;
+        
+    		}
+    	a.setFatBal(0);
+    	this.status = false;
+    	return a;
+    
+ 
+    }
     
     public void emOrdem () {
     	if (this.isEmpty() == true) {
@@ -101,29 +139,38 @@ public class AVLTree<T extends Comparable<T>> {
     		} else {
     			this.percorrerEmOrdem (root);}}
     
-    private void percorrerEmOrdem (	AVLNode r) {
-    	if (r != null) {
-    		percorrerEmOrdem (r.getLeft());
-    		System.out.println(r.getInfo());
-    		percorrerEmOrdem (r.getRight());}}
-    
-    public void passeioPorNivel() {
-        Queue<AVLNode<T>> fila;
-        AVLNode<T> aux;
-
-        if (this.isEmpty() == false) {
-            fila = new LinkedList<>();
-            fila.add(root);
-            while (!fila.isEmpty()) {
-                aux = fila.poll();
-                if (aux.getLeft() != null) {
-                    fila.add(aux.getLeft());
-                }
-                if (aux.getRight() != null) {
-                    fila.add(aux.getRight());
-                }
-                System.out.println(aux.getInfo());
-            }
+    private void percorrerEmOrdem(AVLNode<T> r) {
+        if (r != null) {
+            percorrerEmOrdem(r.getLeft());
+            System.out.println(r.getInfo());
+            percorrerEmOrdem(r.getRight());
         }
     }
-}
+    
+    
+    	public void passeioPorNivel() {
+    	    Queue<AVLNode<T>> fila = new LinkedList<>();
+    	    AVLNode<T> aux;
+
+    	    if (!this.isEmpty()) {
+    	        fila.offer(root);
+
+    	        while (!fila.isEmpty()) {
+    	            aux = fila.poll();
+
+    	            if (aux.getLeft() != null) {
+    	                fila.offer(aux.getLeft());
+    	            }
+    	            if (aux.getRight() != null) {
+    	                fila.offer(aux.getRight());
+    	            }
+
+    	            System.out.println(aux.getInfo());
+    	        }
+    	    }
+    	}
+    
+}  
+        
+  
+
